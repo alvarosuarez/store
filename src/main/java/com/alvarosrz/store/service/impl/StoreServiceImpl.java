@@ -21,25 +21,32 @@ import com.alvarosrz.store.service.StoreService;
 @Service
 public class StoreServiceImpl implements StoreService {
 
-	private Checkout checkout = new Checkout();
+	private Checkout checkout;
 
 	@Autowired
 	private StoreDao storeDao;
 
 	@Override
 	public StoreResponse getPrice(Collection<String> products) {
+		assureCheckout();
 
-		Double total = 0d;
 		for (String code : products) {
 			Product product = storeDao.findProduct(code);
 			if (product == null) {
 				throw new ProductNotFoundException("Product " + code + " not Found.");
-			} else {
-				total = total + product.getPrice();
 			}
+
+			checkout.scan(product);
 		}
 
-		return new StoreResponse(total);
+		return new StoreResponse(checkout.getAmount());
+	}
+
+	private void assureCheckout() {
+		if (checkout == null) {
+			checkout = new Checkout();
+		}
+		checkout.init();
 	}
 
 }
