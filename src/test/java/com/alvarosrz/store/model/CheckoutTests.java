@@ -13,6 +13,7 @@ public class CheckoutTests {
 	@Before
 	public void before() {
 		checkout = new Checkout();
+		checkout.init();
 	}
 
 	@Test
