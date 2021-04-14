@@ -15,9 +15,9 @@ import com.alvarosrz.store.model.Product;
  */
 public class Checkout {
 
-	private Map<String, CheckoutProduct> products;
+	private final PricingRules pricingRules;
 
-	private PricingRules pricingRules;
+	private Map<String, CheckoutProduct> products;
 
 	public Checkout(PricingRules pricingRules) {
 		this.pricingRules = pricingRules;

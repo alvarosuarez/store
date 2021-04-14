@@ -106,6 +106,39 @@ public class CheckoutTests {
 		Assert.assertEquals(expected, checkout.getAmount());
 	}
 
+	@Test
+	public void whenScan2Products_withPriceItemDiscount_productDoubleAmount() {
+		// GIVEN
+		Product product = new Product("C1", "D1", 5.5d);
+		Double productPriceWithDiscount = 4d;
+		princingRules.addRule(new DiscountItemRule("C1", 3, productPriceWithDiscount));
+		Double expected = product.getPrice() * 2;
+
+		// WHEN
+		checkout.scan(product);
+		checkout.scan(product);
+
+		// THEN
+		Assert.assertEquals(expected, checkout.getAmount());
+	}
+
+	@Test
+	public void whenScan2Products_withPriceItemDiscount_productDiscountAmount() {
+		// GIVEN
+		Product product = new Product("C1", "D1", 5.5d);
+		Double productPriceWithDiscount = 4d;
+		princingRules.addRule(new DiscountItemRule("C1", 3, productPriceWithDiscount));
+		Double expected = productPriceWithDiscount * 3;
+
+		// WHEN
+		checkout.scan(product);
+		checkout.scan(product);
+		checkout.scan(product);
+
+		// THEN
+		Assert.assertEquals(expected, checkout.getAmount());
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void whenScanANullProduct_fail() {
 		// GIVEN

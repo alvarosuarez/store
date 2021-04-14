@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alvarosrz.store.dao.StoreDao;
+import com.alvarosrz.store.model.DiscountItemRule;
 import com.alvarosrz.store.model.FreeItemRule;
 import com.alvarosrz.store.model.PricingRules;
 import com.alvarosrz.store.model.Product;
@@ -52,7 +53,8 @@ public class StoreServiceImpl implements StoreService {
 		if (checkout == null) {
 			PricingRules pricingRules = new PricingRules();
 			pricingRules.addRule(new FreeItemRule("VOUCHER", 2));
-			checkout = new Checkout(null);
+			pricingRules.addRule(new DiscountItemRule("TSHIRT", 3, 19d));
+			checkout = new Checkout(pricingRules);
 		}
 		checkout.init();
 	}
