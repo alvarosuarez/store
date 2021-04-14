@@ -10,9 +10,12 @@ public class CheckoutTests {
 
 	private Checkout checkout;
 
+	private PricingRules princingRules;
+
 	@Before
 	public void before() {
-		checkout = new Checkout();
+		princingRules = new PricingRules();
+		checkout = new Checkout(princingRules);
 		checkout.init();
 	}
 
@@ -35,6 +38,68 @@ public class CheckoutTests {
 		Double expected = product.getPrice();
 
 		// WHEN
+		checkout.scan(product);
+
+		// THEN
+		Assert.assertEquals(expected, checkout.getAmount());
+	}
+
+	@Test
+	public void whenScan2Products_productDoubleAmount() {
+		// GIVEN
+		Product product = new Product("C1", "D1", 5.5d);
+		Double expected = product.getPrice() * 2;
+
+		// WHEN
+		checkout.scan(product);
+		checkout.scan(product);
+
+		// THEN
+		Assert.assertEquals(expected, checkout.getAmount());
+	}
+
+	@Test
+	public void whenScan2Products_withFreeItemDiscount_productAmount() {
+		// GIVEN
+		Product product = new Product("C1", "D1", 5.5d);
+		Double expected = product.getPrice();
+		princingRules.addRule(new FreeItemRule("C1", 2));
+
+		// WHEN
+		checkout.scan(product);
+		checkout.scan(product);
+
+		// THEN
+		Assert.assertEquals(expected, checkout.getAmount());
+	}
+
+	@Test
+	public void whenScan3Products_withFreeItemDiscount_productDoubleAmount() {
+		// GIVEN
+		Product product = new Product("C1", "D1", 5.5d);
+		Double expected = product.getPrice() * 2;
+		princingRules.addRule(new FreeItemRule("C1", 2));
+
+		// WHEN
+		checkout.scan(product);
+		checkout.scan(product);
+		checkout.scan(product);
+
+		// THEN
+		Assert.assertEquals(expected, checkout.getAmount());
+	}
+
+	@Test
+	public void whenScan4Products_withFreeItemDiscount_productDoubleAmount() {
+		// GIVEN
+		Product product = new Product("C1", "D1", 5.5d);
+		Double expected = product.getPrice() * 2;
+		princingRules.addRule(new FreeItemRule("C1", 2));
+
+		// WHEN
+		checkout.scan(product);
+		checkout.scan(product);
+		checkout.scan(product);
 		checkout.scan(product);
 
 		// THEN

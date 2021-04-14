@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alvarosrz.store.dao.StoreDao;
+import com.alvarosrz.store.model.FreeItemRule;
+import com.alvarosrz.store.model.PricingRules;
 import com.alvarosrz.store.model.Product;
 import com.alvarosrz.store.model.StoreResponse;
 import com.alvarosrz.store.model.exception.ProductNotFoundException;
@@ -48,7 +50,9 @@ public class StoreServiceImpl implements StoreService {
 
 	private void assureCheckout() {
 		if (checkout == null) {
-			checkout = new Checkout();
+			PricingRules pricingRules = new PricingRules();
+			pricingRules.addRule(new FreeItemRule("VOUCHER", 2));
+			checkout = new Checkout(null);
 		}
 		checkout.init();
 	}

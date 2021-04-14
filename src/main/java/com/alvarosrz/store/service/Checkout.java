@@ -1,10 +1,12 @@
 package com.alvarosrz.store.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.util.Assert;
 
+import com.alvarosrz.store.model.CheckoutProduct;
+import com.alvarosrz.store.model.PricingRules;
 import com.alvarosrz.store.model.Product;
 
 /**
@@ -13,28 +15,42 @@ import com.alvarosrz.store.model.Product;
  */
 public class Checkout {
 
-	private Collection<Product> products;
+	private Map<String, CheckoutProduct> products;
 
-	private Double amount;
+	private PricingRules pricingRules;
 
-	public Checkout() {
-
+	public Checkout(PricingRules pricingRules) {
+		this.pricingRules = pricingRules;
 	}
 
 	public void scan(Product product) {
 		Assert.notNull(product, "Param product can not be null");
 
-		products.add(product);
-		amount += product.getPrice();
+		if (products.containsKey(product.getCode())) {
+			CheckoutProduct checkoutProduct = products.get(product.getCode());
+			checkoutProduct.addUnit(getNewProductPrice(checkoutProduct));
+		} else {
+			products.put(product.getCode(), new CheckoutProduct(product));
+		}
+
 	}
 
 	public void init() {
-		amount = 0d;
-		products = new ArrayList<>();
+		products = new HashMap<>();
 	}
 
 	public Double getAmount() {
+		Double amount = 0d;
+
+		for (CheckoutProduct product : products.values()) {
+			amount += product.getTotalprice();
+		}
+
 		return amount;
+	}
+
+	private Double getNewProductPrice(CheckoutProduct checkoutProduct) {
+		return pricingRules.getNewProductPrice(checkoutProduct);
 	}
 
 }
