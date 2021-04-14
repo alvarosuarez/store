@@ -31,15 +31,19 @@ public class StoreServiceImpl implements StoreService {
 		assureCheckout();
 
 		for (String code : products) {
-			Product product = storeDao.findProduct(code);
-			if (product == null) {
-				throw new ProductNotFoundException("Product " + code + " not Found.");
-			}
-
+			Product product = assureProduct(code);
 			checkout.scan(product);
 		}
 
 		return new StoreResponse(checkout.getAmount());
+	}
+
+	private Product assureProduct(String code) {
+		Product product = storeDao.findProduct(code);
+		if (product == null) {
+			throw new ProductNotFoundException("Product " + code + " not Found.");
+		}
+		return product;
 	}
 
 	private void assureCheckout() {
