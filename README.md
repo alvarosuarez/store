@@ -1,1 +1,5 @@
 # store
+
+Ejemplo de JSON:
+* ["TSHIRT", "TSHIRT", "TSHIRT", "VOUCHER", "TSHIRT"]
+* ["VOUCHER", "TSHIRT", "VOUCHER", "VOUCHER", "PANTS", "TSHIRT", "TSHIRT"]
